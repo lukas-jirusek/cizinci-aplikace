@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <title>Cizinci</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- BS 5-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- BS 5-->
+
+    <script src="{{ url_for('static', filename='yearDropdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='kraje.js') }}"></script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='favicon-32x32.png')}}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body class="container mt-5 mb-5">
+    <h1>Cizinci</h1>
+
+    {% if not error %}
+        <!-- zobrazeni zvolenych parametru-->
+        <div class="container mt-5">
+        <h4>Zvolené parametry:</h4>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <h5>Časové období:</h5>
+                {{data["parameters"]["start_year"]}} - {{data["parameters"]["end_year"]}}
+            </div>
+            
+            <div class="col-md-4">
+                <h5>Oblast:</h5>
+                {{data["parameters"]["area"]}}
+            </div>
+            <div class="col-md-4">
+                <h5>Národnost:</h5>
+                {{data["parameters"]["narodnost"]}}
+            </div>
+        </div>
+        </div>
+        <!-- zobrazeni zvolenych parametru-->
+    {% else %}
+        <div class="container mt-3">
+            <!-- Error message container -->
+            <div class="alert alert-danger" role="alert">
+                <p>{{message}}</p>
+                <p>Nový dotaz můžete vytvořit níže.</p>
+            </div>
+        </div>
+
+    {% endif %}
+
+        <!-- uprava dotazu-->
+        <div class="accordion container mt-4" id="upravaDotazu">  
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        Úprava parametrů dotazu
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                    data-bs-parent="#upravaDotazu">
+
+                    <div class="accordion-body">
+                        <form action="./" method="post">
+                            <div class="containter mt-3">
+                                <h5>Výběr roku</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="start_year">Počáteční rok</label>
+                                            <select id="start_year" class="form-control" name="start_year">
+                                                <!-- Options will be added here -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="end_year">Konečný rok</label>
+                                            <select id="end_year" class="form-control" name="end_year">
+                                                <!-- Options will be added here -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="containter mt-3">
+                                <h5>Výběr oblasti</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="kraj-dropdown">Výběr kraje</label>
+                                            <select id="kraj-dropdown" class="form-control" name="kraj-dropdown">
+                                                <!-- Options will be added here -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="okres-dropdown">Výběr okresu</label>
+                                            <select id="okres-dropdown" class="form-control" name="okres-dropdown">
+                                                <!-- Options will be added here -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="containter mt-3">
+                                <h5>Výběr národnosti cizince</h5>
+                                <div class="container mt-3 bg-light border p-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="narodnostRadio" id="radio0"
+                                            value="0" checked>
+                                        <label class="form-check-label" for="radio0">
+                                            Zvolit všechny národnosti
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row" id="top20">
+                                        <!-- Each column class in Bootstrap for 6 columns layout -->
+
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio804" value="804">
+                                                <label class="form-check-label" for="radio804">
+                                                    Ukrajina
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio703" value="703">
+                                                <label class="form-check-label" for="radio703">
+                                                    Slovensko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio704" value="704">
+                                                <label class="form-check-label" for="radio704">
+                                                    Vietnam
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio643" value="643">
+                                                <label class="form-check-label" for="radio643">
+                                                    Rusko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio642" value="642">
+                                                <label class="form-check-label" for="radio642">
+                                                    Rumunsko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio616" value="616">
+                                                <label class="form-check-label" for="radio616">
+                                                    Polsko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio100" value="100">
+                                                <label class="form-check-label" for="radio100">
+                                                    Bulharsko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio276" value="276">
+                                                <label class="form-check-label" for="radio276">
+                                                    Německo
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio496" value="496">
+                                                <label class="form-check-label" for="radio496">
+                                                    Mongolsko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio348" value="348">
+                                                <label class="form-check-label" for="radio348">
+                                                    Maďarsko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio840" value="840">
+                                                <label class="form-check-label" for="radio840">
+                                                    Spojené státy
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio398" value="398">
+                                                <label class="form-check-label" for="radio398">
+                                                    Kazachstán
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio356" value="356">
+                                                <label class="form-check-label" for="radio356">
+                                                    Indie
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio826" value="826">
+                                                <label class="form-check-label" for="radio826">
+                                                    Spojené království
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio156" value="156">
+                                                <label class="form-check-label" for="radio156">
+                                                    Čína
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio112" value="112">
+                                                <label class="form-check-label" for="radio112">
+                                                    Bělorusko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio498" value="498">
+                                                <label class="form-check-label" for="radio498">
+                                                    Moldavská republika
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio688" value="688">
+                                                <label class="form-check-label" for="radio688">
+                                                    Srbsko
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio380" value="380">
+                                                <label class="form-check-label" for="radio380">
+                                                    Itálie
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio792" value="792">
+                                                <label class="form-check-label" for="radio792">
+                                                    Turecko
+                                                </label>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Repeat the above div for each radio button, changing id, value, and label as necessary -->
+                                        <!-- Make sure to update the ids and labels for each input to keep them unique -->
+                                        <!-- You can generate or copy this structure as many times as needed to create 50 options -->
+                                    </div>
+                                </div>
+
+                                
+                                <div class="accordion container mt-3" id="upravaNarodnosti">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                Zobrazit všechny národnosti
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                            data-bs-parent="#upravaNarodnosti">
+                            
+                                            <div class="accordion-body">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <!-- Each column class in Bootstrap for 6 columns layout -->
+                                                        <!-- Repeat for the number of radio buttons you need -->    
+                                                            
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio608" value="608">
+                                                                <label class="form-check-label" for="radio608">
+                                                                    Filipíny
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio250" value="250">
+                                                                <label class="form-check-label" for="radio250">
+                                                                    Francie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio191" value="191">
+                                                                <label class="form-check-label" for="radio191">
+                                                                    Chorvatsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio860" value="860">
+                                                                <label class="form-check-label" for="radio860">
+                                                                    Uzbekistán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio410" value="410">
+                                                                <label class="form-check-label" for="radio410">
+                                                                    Korejská republika
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio807" value="807">
+                                                                <label class="form-check-label" for="radio807">
+                                                                    Makedonie,býv.jugosl.r.
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio528" value="528">
+                                                                <label class="form-check-label" for="radio528">
+                                                                    Nizozemsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio70" value="70">
+                                                                <label class="form-check-label" for="radio70">
+                                                                    Bosna a Hercegovina
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio40" value="40">
+                                                                <label class="form-check-label" for="radio40">
+                                                                    Rakousko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio51" value="51">
+                                                                <label class="form-check-label" for="radio51">
+                                                                    Arménie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio724" value="724">
+                                                                <label class="form-check-label" for="radio724">
+                                                                    Španělsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio392" value="392">
+                                                                <label class="form-check-label" for="radio392">
+                                                                    Japonsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio300" value="300">
+                                                                <label class="form-check-label" for="radio300">
+                                                                    Řecko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio31" value="31">
+                                                                <label class="form-check-label" for="radio31">
+                                                                    Ázerbájdžán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio268" value="268">
+                                                                <label class="form-check-label" for="radio268">
+                                                                    Gruzie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio818" value="818">
+                                                                <label class="form-check-label" for="radio818">
+                                                                    Egypt
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio764" value="764">
+                                                                <label class="form-check-label" for="radio764">
+                                                                    Thajsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio95" value="95">
+                                                                <label class="form-check-label" for="radio95">
+                                                                    Republika Kosovo
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio376" value="376">
+                                                                <label class="form-check-label" for="radio376">
+                                                                    Izrael
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio788" value="788">
+                                                                <label class="form-check-label" for="radio788">
+                                                                    Tunisko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio417" value="417">
+                                                                <label class="form-check-label" for="radio417">
+                                                                    Kyrgyzstán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio76" value="76">
+                                                                <label class="form-check-label" for="radio76">
+                                                                    Brazílie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio484" value="484">
+                                                                <label class="form-check-label" for="radio484">
+                                                                    Mexiko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio124" value="124">
+                                                                <label class="form-check-label" for="radio124">
+                                                                    Kanada
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio524" value="524">
+                                                                <label class="form-check-label" for="radio524">
+                                                                    Nepál
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio364" value="364">
+                                                                <label class="form-check-label" for="radio364">
+                                                                    Írán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio760" value="760">
+                                                                <label class="form-check-label" for="radio760">
+                                                                    Syrská arabská repub.
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio50" value="50">
+                                                                <label class="form-check-label" for="radio50">
+                                                                    Bangladéš
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio566" value="566">
+                                                                <label class="form-check-label" for="radio566">
+                                                                    Nigérie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio752" value="752">
+                                                                <label class="form-check-label" for="radio752">
+                                                                    Švédsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio586" value="586">
+                                                                <label class="form-check-label" for="radio586">
+                                                                    Pákistán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio620" value="620">
+                                                                <label class="form-check-label" for="radio620">
+                                                                    Portugalsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio12" value="12">
+                                                                <label class="form-check-label" for="radio12">
+                                                                    Alžírsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio440" value="440">
+                                                                <label class="form-check-label" for="radio440">
+                                                                    Litva
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio372" value="372">
+                                                                <label class="form-check-label" for="radio372">
+                                                                    Irsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio36" value="36">
+                                                                <label class="form-check-label" for="radio36">
+                                                                    Austrálie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio288" value="288">
+                                                                <label class="form-check-label" for="radio288">
+                                                                    Ghana
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio56" value="56">
+                                                                <label class="form-check-label" for="radio56">
+                                                                    Belgie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio428" value="428">
+                                                                <label class="form-check-label" for="radio428">
+                                                                    Lotyšsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio158" value="158">
+                                                                <label class="form-check-label" for="radio158">
+                                                                    Tchaj-wan
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio8" value="8">
+                                                                <label class="form-check-label" for="radio8">
+                                                                    Albánie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio170" value="170">
+                                                                <label class="form-check-label" for="radio170">
+                                                                    Kolumbie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio756" value="756">
+                                                                <label class="form-check-label" for="radio756">
+                                                                    Švýcarsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio705" value="705">
+                                                                <label class="form-check-label" for="radio705">
+                                                                    Slovinsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio504" value="504">
+                                                                <label class="form-check-label" for="radio504">
+                                                                    Maroko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio360" value="360">
+                                                                <label class="form-check-label" for="radio360">
+                                                                    Indonésie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio192" value="192">
+                                                                <label class="form-check-label" for="radio192">
+                                                                    Kuba
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio710" value="710">
+                                                                <label class="form-check-label" for="radio710">
+                                                                    Jižní Afrika
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio368" value="368">
+                                                                <label class="form-check-label" for="radio368">
+                                                                    Irák
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio208" value="208">
+                                                                <label class="form-check-label" for="radio208">
+                                                                    Dánsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio152" value="152">
+                                                                <label class="form-check-label" for="radio152">
+                                                                    Chile
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio422" value="422">
+                                                                <label class="form-check-label" for="radio422">
+                                                                    Libanon
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio400" value="400">
+                                                                <label class="form-check-label" for="radio400">
+                                                                    Jordánsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio246" value="246">
+                                                                <label class="form-check-label" for="radio246">
+                                                                    Finsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio604" value="604">
+                                                                <label class="form-check-label" for="radio604">
+                                                                    Peru
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio32" value="32">
+                                                                <label class="form-check-label" for="radio32">
+                                                                    Argentina
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio4" value="4">
+                                                                <label class="form-check-label" for="radio4">
+                                                                    Afghánistán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio233" value="233">
+                                                                <label class="form-check-label" for="radio233">
+                                                                    Estonsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio554" value="554">
+                                                                <label class="form-check-label" for="radio554">
+                                                                    Nový Zéland
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio499" value="499">
+                                                                <label class="form-check-label" for="radio499">
+                                                                    Černá Hora
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio578" value="578">
+                                                                <label class="form-check-label" for="radio578">
+                                                                    Norsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio862" value="862">
+                                                                <label class="form-check-label" for="radio862">
+                                                                    Venezuela
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio434" value="434">
+                                                                <label class="form-check-label" for="radio434">
+                                                                    Libye
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio231" value="231">
+                                                                <label class="form-check-label" for="radio231">
+                                                                    Etiopie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio762" value="762">
+                                                                <label class="form-check-label" for="radio762">
+                                                                    Tádžikistán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio196" value="196">
+                                                                <label class="form-check-label" for="radio196">
+                                                                    Kypr
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio458" value="458">
+                                                                <label class="form-check-label" for="radio458">
+                                                                    Malajsie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio275" value="275">
+                                                                <label class="form-check-label" for="radio275">
+                                                                    Okupované palestinské území
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio887" value="887">
+                                                                <label class="form-check-label" for="radio887">
+                                                                    Jemen
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio144" value="144">
+                                                                <label class="form-check-label" for="radio144">
+                                                                    Srí Lanka
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio120" value="120">
+                                                                <label class="form-check-label" for="radio120">
+                                                                    Kamerun
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio218" value="218">
+                                                                <label class="form-check-label" for="radio218">
+                                                                    Ekvádor
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio404" value="404">
+                                                                <label class="form-check-label" for="radio404">
+                                                                    Keňa
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio188" value="188">
+                                                                <label class="form-check-label" for="radio188">
+                                                                    Kostarika
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio716" value="716">
+                                                                <label class="form-check-label" for="radio716">
+                                                                    Zimbabwe
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio24" value="24">
+                                                                <label class="form-check-label" for="radio24">
+                                                                    Angola
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio894" value="894">
+                                                                <label class="form-check-label" for="radio894">
+                                                                    Zambie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio214" value="214">
+                                                                <label class="form-check-label" for="radio214">
+                                                                    Dominikánská republika
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio180" value="180">
+                                                                <label class="form-check-label" for="radio180">
+                                                                    Kongo, demokrat.repub.
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio68" value="68">
+                                                                <label class="form-check-label" for="radio68">
+                                                                    Bolívie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio686" value="686">
+                                                                <label class="form-check-label" for="radio686">
+                                                                    Senegal
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio384" value="384">
+                                                                <label class="form-check-label" for="radio384">
+                                                                    Pobřeží Slonoviny
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio116" value="116">
+                                                                <label class="form-check-label" for="radio116">
+                                                                    Kambodža
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio324" value="324">
+                                                                <label class="form-check-label" for="radio324">
+                                                                    Guinea
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio682" value="682">
+                                                                <label class="form-check-label" for="radio682">
+                                                                    Saúdská Arábie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio104" value="104">
+                                                                <label class="form-check-label" for="radio104">
+                                                                    Myanmar
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio729" value="729">
+                                                                <label class="form-check-label" for="radio729">
+                                                                    Súdán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio470" value="470">
+                                                                <label class="form-check-label" for="radio470">
+                                                                    Malta
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio800" value="800">
+                                                                <label class="form-check-label" for="radio800">
+                                                                    Uganda
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio702" value="702">
+                                                                <label class="form-check-label" for="radio702">
+                                                                    Singapur
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio795" value="795">
+                                                                <label class="form-check-label" for="radio795">
+                                                                    Turkmenistán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio480" value="480">
+                                                                <label class="form-check-label" for="radio480">
+                                                                    Mauricius
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio340" value="340">
+                                                                <label class="form-check-label" for="radio340">
+                                                                    Honduras
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio320" value="320">
+                                                                <label class="form-check-label" for="radio320">
+                                                                    Guatemala
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio591" value="591">
+                                                                <label class="form-check-label" for="radio591">
+                                                                    Panama
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio462" value="462">
+                                                                <label class="form-check-label" for="radio462">
+                                                                    Maledivy
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio352" value="352">
+                                                                <label class="form-check-label" for="radio352">
+                                                                    Island
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio222" value="222">
+                                                                <label class="form-check-label" for="radio222">
+                                                                    Salvador
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio344" value="344">
+                                                                <label class="form-check-label" for="radio344">
+                                                                    Hongkong
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio178" value="178">
+                                                                <label class="form-check-label" for="radio178">
+                                                                    Kongo
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio516" value="516">
+                                                                <label class="form-check-label" for="radio516">
+                                                                    Namibie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio834" value="834">
+                                                                <label class="form-check-label" for="radio834">
+                                                                    Tanzanie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio204" value="204">
+                                                                <label class="form-check-label" for="radio204">
+                                                                    Benin
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio646" value="646">
+                                                                <label class="form-check-label" for="radio646">
+                                                                    Rwanda
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio512" value="512">
+                                                                <label class="form-check-label" for="radio512">
+                                                                    Omán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio858" value="858">
+                                                                <label class="form-check-label" for="radio858">
+                                                                    Uruguay
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio442" value="442">
+                                                                <label class="form-check-label" for="radio442">
+                                                                    Lucembursko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio418" value="418">
+                                                                <label class="form-check-label" for="radio418">
+                                                                    Laos
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio466" value="466">
+                                                                <label class="form-check-label" for="radio466">
+                                                                    Mali
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio72" value="72">
+                                                                <label class="form-check-label" for="radio72">
+                                                                    Botswana
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio558" value="558">
+                                                                <label class="form-check-label" for="radio558">
+                                                                    Nikaragua
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio132" value="132">
+                                                                <label class="form-check-label" for="radio132">
+                                                                    Kapverdy
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio600" value="600">
+                                                                <label class="form-check-label" for="radio600">
+                                                                    Paraguay
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio450" value="450">
+                                                                <label class="form-check-label" for="radio450">
+                                                                    Madagaskar
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio690" value="690">
+                                                                <label class="form-check-label" for="radio690">
+                                                                    Seychely
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio270" value="270">
+                                                                <label class="form-check-label" for="radio270">
+                                                                    Gambie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio414" value="414">
+                                                                <label class="form-check-label" for="radio414">
+                                                                    Kuvajt
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio624" value="624">
+                                                                <label class="form-check-label" for="radio624">
+                                                                    Guinea-Bissau
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio854" value="854">
+                                                                <label class="form-check-label" for="radio854">
+                                                                    Burkina Faso
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio694" value="694">
+                                                                <label class="form-check-label" for="radio694">
+                                                                    Sierra Leone
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio388" value="388">
+                                                                <label class="form-check-label" for="radio388">
+                                                                    Jamajka
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio598" value="598">
+                                                                <label class="form-check-label" for="radio598">
+                                                                    Papua Nová Guinea
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio48" value="48">
+                                                                <label class="form-check-label" for="radio48">
+                                                                    Bahrajn
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio768" value="768">
+                                                                <label class="form-check-label" for="radio768">
+                                                                    Togo
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio64" value="64">
+                                                                <label class="form-check-label" for="radio64">
+                                                                    Bhútán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio212" value="212">
+                                                                <label class="form-check-label" for="radio212">
+                                                                    Dominika
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio508" value="508">
+                                                                <label class="form-check-label" for="radio508">
+                                                                    Mosambik
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio780" value="780">
+                                                                <label class="form-check-label" for="radio780">
+                                                                    Trinidad a Tobago
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio740" value="740">
+                                                                <label class="form-check-label" for="radio740">
+                                                                    Surinam
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio332" value="332">
+                                                                <label class="form-check-label" for="radio332">
+                                                                    Haiti
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio784" value="784">
+                                                                <label class="form-check-label" for="radio784">
+                                                                    Spojené arabské emiráty
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio659" value="659">
+                                                                <label class="form-check-label" for="radio659">
+                                                                    Svatý Kryštof a Nevis
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio266" value="266">
+                                                                <label class="form-check-label" for="radio266">
+                                                                    Gabon
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio430" value="430">
+                                                                <label class="form-check-label" for="radio430">
+                                                                    Libérie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio148" value="148">
+                                                                <label class="form-check-label" for="radio148">
+                                                                    Čad
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio242" value="242">
+                                                                <label class="form-check-label" for="radio242">
+                                                                    Fidži
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio776" value="776">
+                                                                <label class="form-check-label" for="radio776">
+                                                                    Tonga
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio678" value="678">
+                                                                <label class="form-check-label" for="radio678">
+                                                                    Sv.Tomáš a Princův ostr
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio108" value="108">
+                                                                <label class="form-check-label" for="radio108">
+                                                                    Burundi
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio84" value="84">
+                                                                <label class="form-check-label" for="radio84">
+                                                                    Belize
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio308" value="308">
+                                                                <label class="form-check-label" for="radio308">
+                                                                    Grenada
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio232" value="232">
+                                                                <label class="form-check-label" for="radio232">
+                                                                    Eritrea
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio706" value="706">
+                                                                <label class="form-check-label" for="radio706">
+                                                                    Somálsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio408" value="408">
+                                                                <label class="form-check-label" for="radio408">
+                                                                    Korea, lidově dem. rep.
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio426" value="426">
+                                                                <label class="form-check-label" for="radio426">
+                                                                    Lesotho
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio662" value="662">
+                                                                <label class="form-check-label" for="radio662">
+                                                                    Svatá Lucie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio478" value="478">
+                                                                <label class="form-check-label" for="radio478">
+                                                                    Mauritánie
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio328" value="328">
+                                                                <label class="form-check-label" for="radio328">
+                                                                    Guyana
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio52" value="52">
+                                                                <label class="form-check-label" for="radio52">
+                                                                    Barbados
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio548" value="548">
+                                                                <label class="form-check-label" for="radio548">
+                                                                    Vanuatu
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio562" value="562">
+                                                                <label class="form-check-label" for="radio562">
+                                                                    Niger
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio262" value="262">
+                                                                <label class="form-check-label" for="radio262">
+                                                                    Džibutsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio438" value="438">
+                                                                <label class="form-check-label" for="radio438">
+                                                                    Lichtenštejnsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio748" value="748">
+                                                                <label class="form-check-label" for="radio748">
+                                                                    Svazijsko
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio454" value="454">
+                                                                <label class="form-check-label" for="radio454">
+                                                                    Malawi
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio728" value="728">
+                                                                <label class="form-check-label" for="radio728">
+                                                                    Jižní Súdán
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio520" value="520">
+                                                                <label class="form-check-label" for="radio520">
+                                                                    Nauru
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio674" value="674">
+                                                                <label class="form-check-label" for="radio674">
+                                                                    San Marino
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio670" value="670">
+                                                                <label class="form-check-label" for="radio670">
+                                                                    Sv.Vincenc a Grenadiny
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio882" value="882">
+                                                                <label class="form-check-label" for="radio882">
+                                                                    Samoa
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio446" value="446">
+                                                                <label class="form-check-label" for="radio446">
+                                                                    Macao
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio96" value="96">
+                                                                <label class="form-check-label" for="radio96">
+                                                                    Brunej Darussalam
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio226" value="226">
+                                                                <label class="form-check-label" for="radio226">
+                                                                    Rovníková Guinea
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio174" value="174">
+                                                                <label class="form-check-label" for="radio174">
+                                                                    Komory
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio140" value="140">
+                                                                <label class="form-check-label" for="radio140">
+                                                                    Středoafrická republika
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio20" value="20">
+                                                                <label class="form-check-label" for="radio20">
+                                                                    Andorra
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio634" value="634">
+                                                                <label class="form-check-label" for="radio634">
+                                                                    Katar
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 mt-2 bg-light border p-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="narodnostRadio" id="radio28" value="28">
+                                                                <label class="form-check-label" for="radio28">
+                                                                    Antigua a Barbuda
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                    
+                    
+                                                        <!-- Repeat the above div for each radio button, changing id, value, and label as necessary -->
+                                                        <!-- Make sure to update the ids and labels for each input to keep them unique -->
+                                                        <!-- You can generate or copy this structure as many times as needed to create 50 options -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="containter mt-3">
+                                <button type="submit" class="btn btn-primary">Zobrazit výsledek</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {% if not error %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Odkazy pro tento dotaz
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                    data-bs-parent="#upravaDotazu">
+                    <div class="container mt-2">
+                        <ul class="list-group">
+                            <!-- First item -->
+                            <li class="list-group-item">
+                                <h5 class="mb-1">Odkaz na tento dashboard:</h5>
+                                <a href="{{urls["this"]}}" target="_blank">{{urls["this"]}}</a>
+                            </li>
+                            <!-- Second item -->
+                            <li class="list-group-item">
+                                <h5 class="mb-1">Odkaz na stažení dat pomocí API:</h5>
+                                <a href="{{urls["api"]}}" target="_blank">{{urls["api"]}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <!-- Uprava dotazu konec-->
+
+        {% if not error %}
+
+        <div class="container mt-5">
+            <h3>Data pro rok {{data["parameters"]["end_year"]}}</h3>
+            <div class="row mt-3">
+
+                <!-- soucet -->
+                <div class="col-md-4">
+                    <div class="containter">
+                        <h4>Součet:</h4>
+                        <h4>{{data["totalCount"]["current"]}}</h4>
+                    </div>
+                    {% if data["totalCount"]["last"] %}
+                    <div class="containter mt-3">
+                        <h5>Minulý rok:</h5>
+                        <h6>{{data["totalCount"]["last"]}} ({{data["totalCount"]["change"]}})</h6>
+                    </div>
+                    {% endif %}
+                    
+                </div>
+                <!-- soucet -->
+
+                <!-- Vekova pyramida -->
+                <div class="col-md-4">
+                    <h4>Věková pyramida</h4>
+                    <div class="container mt-3">
+                        <canvas id="ageChart" height="350"></canvas>
+                    </div>
+                    <script>
+                        const totalPopulationPyramidctx = document.getElementById('ageChart').getContext('2d');
+                        const totalPopulationPyramid = new Chart(totalPopulationPyramidctx, {
+                            type: 'bar',
+                            data: {
+                                labels: {{data["ageChart"]["labels"]}}, // Age groups
+                                datasets: [{
+                                    label: ' počet s daným věkem',
+                                    data: {{data["ageChart"]["values"]}}, // Sum of both genders for each age group
+                                    backgroundColor: 'rgba(100, 149, 237, 0.6)', // Color for the bars
+                                    borderColor: 'rgba(100, 149, 237, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y', // Makes the bar chart horizontal
+                                responsive: true,
+                                scales: {
+                                    x: {
+                                        beginAtZero: true, // Start the x-axis from 0
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: false, // This will hide the legend
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+                <!-- Vekova pyramida -->
+
+                <!-- graf pohlavi  -->
+                <div class="col-md-4">
+                    <h4>Složení pohlaví</h4>
+                    <div class="container mt-3">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <script>
+                        const genderPieChartCtx = document.getElementById('pieChart').getContext('2d');
+                        const genderPieChart = new Chart(genderPieChartCtx, {
+                            type: 'pie', // Define chart type
+                            data: {
+                                labels: {{ data["pieData"]["labels"] }}, // These are your labels for the data points
+                                datasets: [{
+                                    data: {{ data["pieData"]["values"] }}, 
+                                    backgroundColor: [
+                                        'rgba(54, 162, 235, 0.6)', // Color for Male, e.g., light blue
+                                        'rgba(255, 99, 132, 0.6)'  // Color for Female, e.g., light red
+                                    ],
+                                    borderColor: [
+                                        'rgba(54, 162, 235, 1)', // Border color for Male
+                                        'rgba(255, 99, 132, 1)'  // Border color for Female
+                                    ],
+                                    borderWidth: 1 // Set border width
+                                }]
+                            },
+                            options: {
+                                plugins: {
+                                    legend: {
+                                        position: 'top', // Position of the legend
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+                <!-- graf pohlavi -->
+            </div>
+        </div>
+
+        {% if data["chartData"]["display"] or data["subregionYearTable"]["display"] or data["nationalityYearTable"]["display"]%}
+        <div class="container mt-5">
+            <h3>Data pro zvolené roky</h3>
+        
+
+            <!-- Casovy graf  -->
+            {% if data["chartData"]["display"] %}
+            <div class="containter mt-3">
+                <h4>Zobrazení počtu cizinců v čase</h4>
+                <div class="container mt-3">
+                    <canvas id="timeChart" height="80"></canvas>
+                </div>
+                <script>
+                const ctx = document.getElementById('timeChart');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                    labels: {{ data["chartData"]["labels"] }}, // roky
+                    datasets: [{
+                        label: 'počet cizinců',
+                        data: {{data["chartData"]["values"]}}, // cizinci
+                        borderWidth: 1
+                    }]  
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                            beginAtZero: true
+                            }
+                        },
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false, // This will hide the legend
+                            }
+                        }
+                    }
+                });
+                </script>
+            </div>
+            {% endif %}
+            <!-- Casovy graf konec -->
+
+            <!-- Tabulka podregion / rok  -->
+            {% if data["subregionYearTable"]["display"] %}
+            <div class="container mt-3 table-responsive">
+                <h4>Tabulka podoblast / rok</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            {% for header in data["subregionYearTable"]["headers"] %}
+                            <th scope="col">{{header}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for x in data["subregionYearTable"]["first_col"] %}
+                            <tr>
+                                <th scope="row">{{ data["subregionYearTable"]["first_col"][loop.index0]}}</th>
+                                {% set rowloop = loop %}
+                                {% for value in data["subregionYearTable"]["data"][loop.index0] %}
+                                    {% if rowloop.last %}
+                                        <th>{{ value }}</th>
+                                    {% else %}
+                                        <td>{{ value }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            <!-- Tabulka podregion / rok  -->
+
+            <!-- Tabulka narodnost / rok  -->
+            {% if data["nationalityYearTable"]["display"] %}
+            <div class="container mt-3 table-responsive">
+                <h4>Tabulka národnost / rok</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            {% for header in data["nationalityYearTable"]["headers"] %}
+                            <th scope="col">{{header}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for x in data["nationalityYearTable"]["first_col"] %}
+                            <tr>
+                                <th scope="row">{{ data["nationalityYearTable"]["first_col"][loop.index0]}}</th>
+                                {% for value in data["nationalityYearTable"]["data"][loop.index0] %}
+                                <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            <!-- Tabulka narodnost / rok  -->
+        </div>
+        {% endif %}
+    {% endif %}
+
+
+</html>
