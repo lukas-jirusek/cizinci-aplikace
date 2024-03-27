@@ -1,2 +1,2 @@
 # cizinci-app
-Webová aplikace pro monitoring počtu ciznců v ČR.
+Webová aplikace pro monitoring počtu cizinců v ČR.
