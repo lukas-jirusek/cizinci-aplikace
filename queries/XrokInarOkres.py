@@ -14,7 +14,7 @@ def XrokInarOkres(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}' AND
+        obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
         okres_kod = '{params["area_kod"]}';
     """
     cur.execute(query)
@@ -28,7 +28,7 @@ def XrokInarOkres(data, cur):
             zaznam_denormalised
         WHERE 
             rok = '{int(params["end_year"]) - 1}' AND  
-            obcanstvi_kod = '{params["narodnost_kod"]}' AND
+            obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
             okres_kod = '{params["area_kod"]}';
         """
         cur.execute(query)
@@ -52,7 +52,7 @@ def XrokInarOkres(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}' AND
+        obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
         okres_kod = '{params["area_kod"]}'
     GROUP BY 
         vek_kod
@@ -70,7 +70,7 @@ def XrokInarOkres(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}' AND
+        obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
         okres_kod = '{params["area_kod"]}'
     GROUP BY 
         pohlavi_kod
@@ -92,7 +92,7 @@ def XrokInarOkres(data, cur):
     WHERE 
         rok BETWEEN '{params["start_year"]}' AND '{params["end_year"]}' AND
         okres_kod = '{params["area_kod"]}' AND
-        obcanstvi_kod = '{params["narodnost_kod"]}'
+        obcanstvi_kod = '{params["obcanstvi_kod"]}'
     GROUP BY 
         rok
     ORDER BY 

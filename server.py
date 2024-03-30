@@ -24,7 +24,7 @@ def processParameters(params, req):
         if "okres-dropdown" in req.form:
             params["area_kod"] = req.form["okres-dropdown"]
         if "narodnostRadio" in req.form:
-            params["narodnost_kod"] = req.form["narodnostRadio"]
+            params["obcanstvi_kod"] = req.form["narodnostRadio"]
         
         return True
 
@@ -51,11 +51,11 @@ def checkParameters(parameters):
     if start > end:
         return "Hodnota parametru start_year nesmí být větší než hodnota end_year."
 
-    narodnost = parameters["narodnost_kod"]
+    narodnost = parameters["obcanstvi_kod"]
     oblast = parameters["area_kod"]
     
     if narodnost not in narodnosti:
-        return "Neplatná hodnota pro parametr narodnost_kod: " + narodnost
+        return "Neplatná hodnota pro parametr obcanstvi_kod: " + narodnost
     
     if oblast not in oblasti:
         return "Neplatná hodnota pro parametr area_kod: " + oblast
@@ -71,7 +71,7 @@ def api():
         "start_year": "2014",
         "end_year": "2022",
         "area_kod": "19",
-        "narodnost_kod": "0"
+        "obcanstvi_kod": "0"
     }
 
     res = processParameters(parametry, request)
@@ -104,7 +104,7 @@ def api():
 
     #mapovaní národností a oblasti
     parametry["area"] = oblasti[parametry["area_kod"]]
-    parametry["narodnost"] = narodnosti[parametry["narodnost_kod"]]
+    parametry["narodnost"] = narodnosti[parametry["obcanstvi_kod"]]
 
     #provedení dotazu
     templateData["parameters"] = parametry
@@ -124,7 +124,7 @@ def index():
         "start_year": "2014",
         "end_year": "2022",
         "area_kod": "19",
-        "narodnost_kod": "0"
+        "obcanstvi_kod": "0"
     }
 
     res = processParameters(parametry, request)
@@ -151,7 +151,7 @@ def index():
 
     #mapovaní národností a oblasti
     parametry["area"] = oblasti[parametry["area_kod"]]
-    parametry["narodnost"] = narodnosti[parametry["narodnost_kod"]]
+    parametry["narodnost"] = narodnosti[parametry["obcanstvi_kod"]]
 
 
     #provedení dotazu

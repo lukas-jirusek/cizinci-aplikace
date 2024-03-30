@@ -15,7 +15,7 @@ def IrokInarKraj(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}' AND
+        obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
         kraj_kod = '{params["area_kod"]}';
     """
     cur.execute(query)
@@ -29,7 +29,7 @@ def IrokInarKraj(data, cur):
             zaznam_denormalised
         WHERE 
             rok = '{int(params["end_year"]) - 1}' AND  
-            obcanstvi_kod = '{params["narodnost_kod"]}' AND
+            obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
             kraj_kod = '{params["area_kod"]}';
         """
         cur.execute(query)
@@ -53,7 +53,7 @@ def IrokInarKraj(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}' AND
+        obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
         kraj_kod = '{params["area_kod"]}'
     GROUP BY 
         vek_kod
@@ -72,7 +72,7 @@ def IrokInarKraj(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}' AND
+        obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
         kraj_kod = '{params["area_kod"]}'
     GROUP BY 
         pohlavi_kod
@@ -97,7 +97,7 @@ def IrokInarKraj(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND
-        obcanstvi_kod = '{params["narodnost_kod"]}' AND
+        obcanstvi_kod = '{params["obcanstvi_kod"]}' AND
         kraj_kod = '{params["area_kod"]}'
     GROUP BY 
         rok, okres_kod

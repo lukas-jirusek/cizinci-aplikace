@@ -21,7 +21,7 @@ def getData(data, cur):
 
     # JEDEN ROK
     if params["start_year"] == params["end_year"]:
-        if params["narodnost_kod"] == "0":
+        if params["obcanstvi_kod"] == "0":
             # VSECHNY NARODNOSTI
             if params["area_kod"] == "19":
                 IrokXnarCR(data, cur)
@@ -46,7 +46,7 @@ def getData(data, cur):
 
     # VICE LET
     else:
-        if params["narodnost_kod"] == "0":
+        if params["obcanstvi_kod"] == "0":
             # VSECHNY NARODNOSTI
             if params["area_kod"] == "19":
                 # CR

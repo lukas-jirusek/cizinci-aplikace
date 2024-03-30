@@ -15,7 +15,7 @@ def XrokInarCR(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}';
+        obcanstvi_kod = '{params["obcanstvi_kod"]}';
     """
     cur.execute(query)
     current = cur.fetchall()[0][0]
@@ -28,7 +28,7 @@ def XrokInarCR(data, cur):
             zaznam_denormalised
         WHERE 
             rok = '{int(params["end_year"]) - 1}' AND  
-            obcanstvi_kod = '{params["narodnost_kod"]}';
+            obcanstvi_kod = '{params["obcanstvi_kod"]}';
         """
         cur.execute(query)
         prev = cur.fetchall()[0][0]
@@ -51,7 +51,7 @@ def XrokInarCR(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}'
+        obcanstvi_kod = '{params["obcanstvi_kod"]}'
     GROUP BY 
         vek_kod
     ORDER BY 
@@ -69,7 +69,7 @@ def XrokInarCR(data, cur):
         zaznam_denormalised
     WHERE 
         rok = '{params["end_year"]}' AND  
-        obcanstvi_kod = '{params["narodnost_kod"]}'
+        obcanstvi_kod = '{params["obcanstvi_kod"]}'
     GROUP BY 
         pohlavi_kod
     ORDER BY 
@@ -89,7 +89,7 @@ def XrokInarCR(data, cur):
         zaznam_denormalised
     WHERE 
         rok BETWEEN '{params["start_year"]}' AND '{params["end_year"]}' AND
-        obcanstvi_kod = '{params["narodnost_kod"]}'
+        obcanstvi_kod = '{params["obcanstvi_kod"]}'
     GROUP BY 
         rok
     ORDER BY 
@@ -112,7 +112,7 @@ def XrokInarCR(data, cur):
         zaznam_denormalised
     WHERE 
         rok BETWEEN '{params["start_year"]}' AND '{params["end_year"]}' AND
-        obcanstvi_kod = '{params["narodnost_kod"]}'
+        obcanstvi_kod = '{params["obcanstvi_kod"]}'
     GROUP BY 
         rok, kraj_kod
     ORDER BY 

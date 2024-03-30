@@ -5,14 +5,14 @@ def apiResponse(templateData):
             "start_year": "2014",
             "end_year": "2022",
             "area_kod": "19",
-            "narodnost_kod": "0"
+            "obcanstvi_kod": "0"
         },
         "status": {
             "valid" : True,
             "error_message": ""
         },
         "data": {
-            "nationality_string" : "",
+            "citizenship_string" : "",
             "area_string" : "",
             "total_foreigners": 0,
             "age_pyramid" : {
@@ -35,7 +35,7 @@ def apiResponse(templateData):
         }
     
     if templateData["nationalityYearTable"]["display"]:
-        response["data"]["nationality_year_table"] = {
+        response["data"]["citizenship_year_table"] = {
             "columns" : templateData["nationalityYearTable"]["headers"],
             "rows": templateData["nationalityYearTable"]["first_col"],
             "data": templateData["nationalityYearTable"]["data"]
@@ -49,7 +49,7 @@ def apiResponse(templateData):
     for key in response["input_parameters"]:
         response["input_parameters"][key] = templateData["parameters"][key]
     
-    response["data"]["nationality_string"] = templateData["parameters"]["narodnost"]
+    response["data"]["citizenship_string"] = templateData["parameters"]["narodnost"]
     response["data"]["area_string"] = templateData["parameters"]["area"]
     response["data"]["total_foreigners"] = templateData["totalCount"]["current"]
     
