@@ -2,7 +2,7 @@
 
 ## Požadavky
 
-V prní řadě je zapotřebí mát nainstalovaný Python.
+V první řadě je zapotřebí mát nainstalovaný Python.
 
 Dále je potřeba mít nainstalované tyto Python knihovny:
 - Flask
