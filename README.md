@@ -37,4 +37,4 @@ PythonAnywhere (pomalé načítání stránky):
     
 Ngrok (self-hosted, nemusí fungovat):
 
-[Ngrok](up-chow-stunning.ngrok-free.app)
+[Ngrok](https://up-chow-stunning.ngrok-free.app)
