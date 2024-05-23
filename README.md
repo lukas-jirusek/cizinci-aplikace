@@ -29,3 +29,12 @@ Po spuštění serveru lze aplikace otevřít v prohlížeči navštívením toh
     
     http://localhost:5000
     
+## Deploynuté verze:
+
+PythonAnywhere (pomalé načítání stránky):
+
+    https://lukasjirusek.pythonanywhere.com/
+
+Ngrok (self-hosted, nemusí fungovat):
+
+    up-chow-stunning.ngrok-free.app    
