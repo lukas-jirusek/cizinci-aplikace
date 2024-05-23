@@ -33,8 +33,8 @@ Po spuštění serveru lze aplikace otevřít v prohlížeči navštívením toh
 
 PythonAnywhere (pomalé načítání stránky):
 
-    [PythonAnywhere](https://lukasjirusek.pythonanywhere.com/)
+[PythonAnywhere](https://lukasjirusek.pythonanywhere.com/)
     
 Ngrok (self-hosted, nemusí fungovat):
 
-    [Ngrok](up-chow-stunning.ngrok-free.app)
+[Ngrok](up-chow-stunning.ngrok-free.app)
