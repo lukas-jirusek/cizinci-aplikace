@@ -1,5 +1,7 @@
 # Aplikace pro monitorování počtu počtu cizinců
 
+## [Odkaz na aplikaci](https://fourth-buffer-424217-j3.lm.r.appspot.com/)
+
 ## Požadavky
 
 V první řadě je zapotřebí mát nainstalovaný Python.
@@ -29,12 +31,3 @@ Po spuštění serveru lze aplikace otevřít v prohlížeči navštívením toh
     
     http://localhost:5000
     
-## Deploynuté verze:
-
-PythonAnywhere (pomalé načítání stránky):
-
-[PythonAnywhere](https://lukasjirusek.pythonanywhere.com/)
-    
-Ngrok (self-hosted, nemusí fungovat):
-
-[Ngrok](https://up-chow-stunning.ngrok-free.app)
