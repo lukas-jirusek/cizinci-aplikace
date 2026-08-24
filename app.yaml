@@ -1,0 +1,5 @@
+runtime: python314
+
+# App Engine executes this WSGI application in production. The development
+# server at the bottom of server.py remains useful for local work only.
+entrypoint: gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 120 server:app
