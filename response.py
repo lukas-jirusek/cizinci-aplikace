@@ -3,7 +3,7 @@ def apiResponse(templateData):
     response = {
         "input_parameters": {
             "start_year": "2014",
-            "end_year": "2022",
+            "end_year": "2024",
             "area_kod": "19",
             "obcanstvi_kod": "0"
         },

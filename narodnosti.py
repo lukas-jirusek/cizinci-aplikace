@@ -189,5 +189,7 @@ narodnosti = {
     "226": "Rovníková Guinea",
     "174": "Komory",
     "140": "Středoafrická republika",
-    "20": "Andorra"
+    "20": "Andorra",
+    "626": "Východní Timor",
+    "654": "Svatá Helena"
 }

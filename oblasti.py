@@ -1,5 +1,6 @@
 oblasti = {
     "19": "Celá ČR",
+    "99999": "Nezjištěno",
     "40924": "Praha",
     "3115": "Jihomoravský kraj",
     "40703": "Blansko",

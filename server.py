@@ -38,7 +38,7 @@ def processParameters(params, req):
     return True
 
 def checkParameters(parameters):
-    validYears = [str(y) for y in range(2004, 2023)]
+    validYears = [str(y) for y in range(2004, 2025)]
     start = parameters["start_year"]
     end = parameters["end_year"]
     
@@ -69,7 +69,7 @@ def api():
     #zpracovani parametru
     parametry = {
         "start_year": "2014",
-        "end_year": "2022",
+        "end_year": "2024",
         "area_kod": "19",
         "obcanstvi_kod": "0"
     }
@@ -122,7 +122,7 @@ def index():
     #zpracovani parametru
     parametry = {
         "start_year": "2014",
-        "end_year": "2022",
+        "end_year": "2024",
         "area_kod": "19",
         "obcanstvi_kod": "0"
     }

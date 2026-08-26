@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     var startYear = 2004; 
-    var endYear = 2022; 
+    var endYear = 2024;
     var startYearSelect = document.getElementById('start_year');
     var endYearSelect = document.getElementById('end_year');
 
