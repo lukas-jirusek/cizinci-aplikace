@@ -17,20 +17,22 @@ def create_indexes():
         # Single column indexes
         ("idx_rok", "CREATE INDEX IF NOT EXISTS idx_rok ON zaznam_denormalised(rok)"),
         ("idx_obcanstvi_kod", "CREATE INDEX IF NOT EXISTS idx_obcanstvi_kod ON zaznam_denormalised(obcanstvi_kod)"),
-        ("idx_kraj_kod", "CREATE INDEX IF NOT EXISTS idx_kraj_kod ON zaznam_denormalised(kraj_kod)"),
         ("idx_okres_kod", "CREATE INDEX IF NOT EXISTS idx_okres_kod ON zaznam_denormalised(okres_kod)"),
         
         # Composite indexes for common WHERE + GROUP BY combinations
-        ("idx_rok_obcanstvi", "CREATE INDEX IF NOT EXISTS idx_rok_obcanstvi ON zaznam_denormalised(rok, obcanstvi_kod)"),
         ("idx_rok_kraj", "CREATE INDEX IF NOT EXISTS idx_rok_kraj ON zaznam_denormalised(rok, kraj_kod)"),
         ("idx_rok_okres", "CREATE INDEX IF NOT EXISTS idx_rok_okres ON zaznam_denormalised(rok, okres_kod)"),
-        ("idx_rok_vek", "CREATE INDEX IF NOT EXISTS idx_rok_vek ON zaznam_denormalised(rok, vek_kod)"),
     ]
+    removed_indexes = ["idx_kraj_kod", "idx_rok_obcanstvi", "idx_rok_vek"]
     
     print("Creating database indexes...")
     print("-" * 50)
     
     start_time = time.time()
+
+    for index_name in removed_indexes:
+        cursor.execute(f"DROP INDEX IF EXISTS {index_name}")
+    conn.commit()
     
     for index_name, sql in indexes:
         try:

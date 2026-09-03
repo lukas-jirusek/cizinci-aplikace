@@ -7,7 +7,25 @@ Replaces: IrokInarCR, IrokXnarCR, IrokInarKraj, IrokXnarKraj, IrokInarOkres, Iro
 from oblasti import oblasti
 from narodnosti import narodnosti
 from dataDictionary import ageCodes, genderCodes
-import pandas as pd
+
+
+def pivot_records(records, sort_by_last_value=False):
+    columns = []
+    rows = {}
+    for column, row_label, value in records:
+        if column not in columns:
+            columns.append(column)
+        rows.setdefault(row_label, {})[column] = value
+
+    row_labels = list(rows)
+    if sort_by_last_value:
+        row_labels.sort(key=lambda label: rows[label].get(columns[-1], 0), reverse=True)
+
+    values = [
+        [rows[label].get(column, 0) for column in columns]
+        for label in row_labels
+    ]
+    return columns, row_labels, values
 
 
 def execute_unified_query(data, cur):
@@ -151,20 +169,16 @@ def execute_unified_query(data, cur):
         subregions = cur.fetchall()
         subregions = sorted([(x[0], oblasti[x[1]], x[2]) for x in subregions], key=lambda x: x[1])
         
-        df = pd.DataFrame(subregions, columns=['Year', 'Nationality', 'Count'])
-        pivot_table = df.pivot(index='Nationality', columns='Year', values='Count').fillna(0).convert_dtypes(convert_integer=True)
-        
         # Add total row
         area_name = oblasti[params["area_kod"]]
         if area_type == "CR":
             total_label = "Celá ČR"
         else:
             total_label = f"Celý {area_name}"
-        pivot_table.loc[total_label] = pivot_table.sum(axis=0)
-        
-        headers = pivot_table.columns.tolist()
-        index = pivot_table.index.tolist()
-        values = pivot_table.values.tolist()
+
+        headers, index, values = pivot_records(subregions)
+        values.append([sum(row[column_index] for row in values) for column_index in range(len(headers))])
+        index.append(total_label)
         
         data["subregionYearTable"]["display"] = True
         data["subregionYearTable"]["headers"] = headers
@@ -180,13 +194,7 @@ def execute_unified_query(data, cur):
         nationalities_data = cur.fetchall()
         nationalities_data = sorted([(x[0], narodnosti[x[1]], x[2]) for x in nationalities_data], key=lambda x: x[1])
         
-        df = pd.DataFrame(nationalities_data, columns=['Year', 'Nationality', 'Count'])
-        pivot_table = df.pivot(index='Nationality', columns='Year', values='Count').fillna(0).convert_dtypes(convert_integer=True)
-        pivot_table = pivot_table.sort_values(by=pivot_table.columns[-1], ascending=False)
-        
-        headers = pivot_table.columns.tolist()
-        index = pivot_table.index.tolist()
-        values = pivot_table.values.tolist()
+        headers, index, values = pivot_records(nationalities_data, sort_by_last_value=True)
         
         data["nationalityYearTable"]["display"] = True
         data["nationalityYearTable"]["headers"] = headers
