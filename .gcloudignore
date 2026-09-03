@@ -1,0 +1,14 @@
+.git/
+.gitignore
+.gcloudignore
+
+# Use the compressed denormalised database in App Engine.
+cizinci.db
+separate.db
+separate.db.zst
+*.db-wal
+*.db-shm
+*.db-journal
+
+__pycache__/
+*.py[cod]
