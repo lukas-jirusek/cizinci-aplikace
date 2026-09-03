@@ -6,6 +6,7 @@ Replaces: IrokInarCR, IrokXnarCR, IrokInarKraj, IrokXnarKraj, IrokInarOkres, Iro
 
 from oblasti import oblasti
 from narodnosti import narodnosti
+from dataDictionary import ageCodes, genderCodes
 import pandas as pd
 
 
@@ -75,7 +76,7 @@ def execute_unified_query(data, cur):
         current_where += " AND okres_kod = ?"
         current_params.append(params['area_kod'])
     
-    query_current = f"SELECT SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {current_where}"
+    query_current = f"SELECT COALESCE(SUM(hodnota), 0) AS total_foreigners FROM zaznam_denormalised WHERE {current_where}"
     cur.execute(query_current, current_params)
     current = cur.fetchall()[0][0]
     
@@ -97,7 +98,7 @@ def execute_unified_query(data, cur):
             prev_where += " AND okres_kod = ?"
             prev_params.append(params['area_kod'])
         
-        query_prev = f"SELECT SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {prev_where}"
+        query_prev = f"SELECT COALESCE(SUM(hodnota), 0) AS total_foreigners FROM zaznam_denormalised WHERE {prev_where}"
         cur.execute(query_prev, prev_params)
         prev = cur.fetchall()[0][0]
         if current > prev:
@@ -110,23 +111,26 @@ def execute_unified_query(data, cur):
     data["totalCount"]["change"] = change
     
     # 2. AGE DISTRIBUTION
-    where_clause, where_params = build_where_clause(include_year_range=True)
-    age_query = f"SELECT SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {where_clause} GROUP BY vek_kod ORDER BY vek_kod"
-    cur.execute(age_query, where_params)
+    distribution_where, distribution_params = build_where_clause(include_year_range=False)
+    age_query = f"SELECT vek_kod, COALESCE(SUM(hodnota), 0) AS total_foreigners FROM zaznam_denormalised WHERE {distribution_where} GROUP BY vek_kod ORDER BY vek_kod"
+    cur.execute(age_query, distribution_params)
     result = cur.fetchall()
-    data["ageChart"]["values"] = [x[0] for x in result]
+    age_values = {x[0]: x[1] for x in result}
+    data["ageChart"]["values"] = [age_values.get(code, 0) for code in ageCodes]
     
     # 3. GENDER SPLIT
-    gender_query = f"SELECT SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {where_clause} GROUP BY pohlavi_kod ORDER BY pohlavi_kod"
-    cur.execute(gender_query, where_params)
+    gender_query = f"SELECT pohlavi_kod, COALESCE(SUM(hodnota), 0) AS total_foreigners FROM zaznam_denormalised WHERE {distribution_where} GROUP BY pohlavi_kod ORDER BY pohlavi_kod"
+    cur.execute(gender_query, distribution_params)
     result = cur.fetchall()
-    data["pieData"]["values"] = [x[0] for x in result]
+    gender_values = {x[0]: x[1] for x in result}
+    data["pieData"]["values"] = [gender_values.get(code, 0) for code in genderCodes]
     
     # 4. TIME SERIES (only for multi-year queries)
+    range_where, range_params = build_where_clause(include_year_range=True)
     data["chartData"]["display"] = not is_single_year
     if not is_single_year:
-        time_series_query = f"SELECT rok AS year, SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {where_clause} GROUP BY rok ORDER BY rok"
-        cur.execute(time_series_query, where_params)
+        time_series_query = f"SELECT rok AS year, SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {range_where} GROUP BY rok ORDER BY rok"
+        cur.execute(time_series_query, range_params)
         result = cur.fetchall()
         data["chartData"]["labels"] = [x[0] for x in result]
         data["chartData"]["values"] = [x[1] for x in result]
@@ -134,16 +138,16 @@ def execute_unified_query(data, cur):
     # 5. REGIONAL/DISTRICT BREAKDOWN
     if area_type == "CR":
         # Show breakdown by region (kraj)
-        regional_query = f"SELECT rok AS year, kraj_kod AS region, SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {where_clause} GROUP BY rok, kraj_kod ORDER BY rok, kraj_kod"
+        regional_query = f"SELECT rok AS year, kraj_kod AS region, SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {range_where} GROUP BY rok, kraj_kod ORDER BY rok, kraj_kod"
     elif area_type == "kraj":
         # Show breakdown by district (okres)
-        regional_query = f"SELECT rok AS year, okres_kod AS region, SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {where_clause} GROUP BY rok, okres_kod ORDER BY rok, okres_kod"
+        regional_query = f"SELECT rok AS year, okres_kod AS region, SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {range_where} GROUP BY rok, okres_kod ORDER BY rok, okres_kod"
     else:
         # okres - no further subregions to show
         regional_query = None
     
     if regional_query:
-        cur.execute(regional_query, where_params)
+        cur.execute(regional_query, range_params)
         subregions = cur.fetchall()
         subregions = sorted([(x[0], oblasti[x[1]], x[2]) for x in subregions], key=lambda x: x[1])
         
@@ -171,8 +175,8 @@ def execute_unified_query(data, cur):
     
     # 6. NATIONALITY BREAKDOWN (only for all-nationality + region/district queries)
     if not is_single_nationality and area_type in ["kraj", "CR"]:
-        nationality_query = f"SELECT rok AS year, obcanstvi_kod, SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {where_clause} GROUP BY rok, obcanstvi_kod ORDER BY rok, obcanstvi_kod"
-        cur.execute(nationality_query, where_params)
+        nationality_query = f"SELECT rok AS year, obcanstvi_kod, SUM(hodnota) AS total_foreigners FROM zaznam_denormalised WHERE {range_where} GROUP BY rok, obcanstvi_kod ORDER BY rok, obcanstvi_kod"
+        cur.execute(nationality_query, range_params)
         nationalities_data = cur.fetchall()
         nationalities_data = sorted([(x[0], narodnosti[x[1]], x[2]) for x in nationalities_data], key=lambda x: x[1])
         

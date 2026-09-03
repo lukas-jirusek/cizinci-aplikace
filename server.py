@@ -3,11 +3,9 @@ from flask import Flask, render_template, request, jsonify
 from narodnosti import narodnosti
 from oblasti import oblasti
 
-from query_logic import getData
-from dataDictionary import data as templateData
+from query_logic import get_cached_data
+from dataDictionary import create_data
 from response import apiResponse
-
-import sqlite3
 
 import json
 
@@ -32,8 +30,6 @@ def processParameters(params, req):
         for key, value in req.args.items():
             if key in params:
                 params[key] = value
-            else:
-                return key
     
     return True
 
@@ -65,6 +61,7 @@ def checkParameters(parameters):
     
 @app.route("/api")
 def api():
+    templateData = create_data()
     
     #zpracovani parametru
     parametry = {
@@ -102,14 +99,7 @@ def api():
         return jsonify(apiResult)
     
 
-    #mapovaní národností a oblasti
-    parametry["area"] = oblasti[parametry["area_kod"]]
-    parametry["narodnost"] = narodnosti[parametry["obcanstvi_kod"]]
-
-    #provedení dotazu
-    templateData["parameters"] = parametry
-    with sqlite3.connect("cizinci.db") as conn:
-        getData(templateData, conn.cursor())
+    templateData = get_cached_data(parametry)
 
     apiResult = apiResponse(templateData)
 
@@ -118,6 +108,7 @@ def api():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    templateData = create_data()
     
     #zpracovani parametru
     parametry = {
@@ -149,15 +140,7 @@ def index():
     
     
 
-    #mapovaní národností a oblasti
-    parametry["area"] = oblasti[parametry["area_kod"]]
-    parametry["narodnost"] = narodnosti[parametry["obcanstvi_kod"]]
-
-
-    #provedení dotazu
-    templateData["parameters"] = parametry
-    with sqlite3.connect("cizinci.db") as conn:
-        getData(templateData, conn.cursor())
+    templateData = get_cached_data(parametry)
 
 
     return render_template("index.jinja", data=templateData, urls=urls, error=False)
