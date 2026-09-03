@@ -1,0 +1,13 @@
+.git
+.github
+__pycache__
+*.py[cod]
+
+cizinci.db
+separate.db
+*.db-wal
+*.db-shm
+*.db-journal
+
+Dockerfile
+.dockerignore

@@ -1,9 +1,6 @@
-name: Deploy to App Engine
+name: Deploy to App Engine (disabled)
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:

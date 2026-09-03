@@ -1,0 +1,52 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: fourth-buffer-424217-j3
+  REGION: europe-central2
+  SERVICE_NAME: cizinci
+  IMAGE: europe-central2-docker.pkg.dev/fourth-buffer-424217-j3/gae-standard/cizinci-cloud-run
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          workload_identity_provider: projects/584782482619/locations/global/workloadIdentityPools/github-actions/providers/github
+          service_account: github-appengine-deployer@fourth-buffer-424217-j3.iam.gserviceaccount.com
+
+      - name: Set up Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build and push image
+        run: gcloud builds submit --tag "$IMAGE:${GITHUB_SHA}" . --project="$PROJECT_ID"
+
+      - name: Deploy to Cloud Run
+        run: >-
+          gcloud run deploy "$SERVICE_NAME"
+          --image "$IMAGE:${GITHUB_SHA}"
+          --project="$PROJECT_ID"
+          --region="$REGION"
+          --platform=managed
+          --allow-unauthenticated
+          --memory=512Mi
+          --cpu=1
+          --min-instances=0
+          --max-instances=1
+          --concurrency=1
