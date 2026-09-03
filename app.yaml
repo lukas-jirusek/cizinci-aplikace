@@ -7,5 +7,4 @@ entrypoint: gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 120 server:
 handlers:
   - url: /.*
     secure: always
-    redirect_http_to_https: true
     script: auto
