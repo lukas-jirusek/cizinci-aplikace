@@ -72,3 +72,14 @@ Cleanup cannot reduce the size of the current image. It only controls accumulate
 The repository-level optimizations are complete, but the remaining approximately 539 MB image is dominated by the App Engine Standard managed runtime. There is no practical source-level cleanup that will remove the large system libraries shown above.
 
 The deployment is being moved to Cloud Run with a custom `python:3.14-slim` Dockerfile. A local build produced an approximately 90 MB image, compared with approximately 539 MiB for the App Engine Standard image. Cloud Run still uses Artifact Registry, but the custom base image avoids the large managed App Engine runtime. The Cloud Run service should remain configured with zero minimum instances so it can scale to zero when unused.
+
+The Cloud Run service and its image repository are configured for `europe-west1`. The Artifact Registry repository must exist there before the first deployment; repository locations cannot be changed after creation. Create it once with:
+
+```powershell
+gcloud artifacts repositories create gae-standard `
+  --repository-format=docker `
+  --location=europe-west1 `
+  --project=fourth-buffer-424217-j3
+```
+
+The GitHub deployment service account also needs Artifact Registry Writer access to this repository.

@@ -12,9 +12,9 @@ permissions:
 
 env:
   PROJECT_ID: fourth-buffer-424217-j3
-  REGION: europe-central2
+  REGION: europe-west1
   SERVICE_NAME: cizinci
-  IMAGE: europe-central2-docker.pkg.dev/fourth-buffer-424217-j3/gae-standard/cizinci-cloud-run
+  IMAGE: europe-west1-docker.pkg.dev/fourth-buffer-424217-j3/gae-standard/cizinci-cloud-run
 
 jobs:
   deploy:
@@ -35,7 +35,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Configure Docker authentication
-        run: gcloud auth configure-docker europe-central2-docker.pkg.dev --quiet
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
 
       - name: Build and push image
         run: |
